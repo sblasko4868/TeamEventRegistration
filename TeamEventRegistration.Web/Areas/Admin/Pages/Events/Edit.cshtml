@@ -1,0 +1,79 @@
+﻿@page "{id}"
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Events.EditModel
+
+<h4>Event</h4>
+<hr />
+<form method="post">
+    <div class="row">
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Event.Id" />
+            <div class="form-group">
+                <label asp-for="Event.EventName" class="control-label"></label>
+                <input asp-for="Event.EventName" class="form-control" />
+                <span asp-validation-for="Event.EventName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.RegistrationStart" class="control-label"></label>
+                <input asp-for="Event.RegistrationStart" class="form-control" />
+                <span asp-validation-for="Event.RegistrationStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.RegistrationEnd" class="control-label"></label>
+                <input asp-for="Event.RegistrationEnd" class="form-control" />
+                <span asp-validation-for="Event.RegistrationEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.EventDisplayDateTime" class="control-label"></label>
+                <input asp-for="Event.EventDisplayDateTime" class="form-control" />
+                <span asp-validation-for="Event.EventDisplayDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Event.Active" /> @Html.DisplayNameFor(model => model.Event.Active)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.EventPassword" class="control-label"></label>
+                <input asp-for="Event.EventPassword" class="form-control" />
+                <span asp-validation-for="Event.EventPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.MaxTeamMembers" class="control-label"></label>
+                <input asp-for="Event.MaxTeamMembers" class="form-control" />
+                <span asp-validation-for="Event.MaxTeamMembers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Event.EmbedHTML" class="control-label"></label>
+                @Html.TextAreaFor(model => model.Event.EmbedHTML, new { @class = "form-control" })
+                <span asp-validation-for="Event.EmbedHTML" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="form-label select-label">Event Managers</label>
+                <select id="EventManagerList" asp-for="SelectedEventManagerIds" class="form-control" asp-items="Model.AvailableEventManagersList"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $(document).ready(function () {
+        var teamMemberMultiSelectList = $("#EventManagerList").kendoMultiSelect({
+            filter: "contains",
+            height: "auto"
+        });
+        $("#EventManagerList").data("kendoMultiSelect").wrapper.addClass("h-auto");
+    });
+</script>
+}

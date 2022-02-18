@@ -1,0 +1,84 @@
+﻿@page
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Events.DetailsModel
+
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EventName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EventName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.RegistrationStart)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.RegistrationStart)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.RegistrationEnd)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.RegistrationEnd)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EventDisplayDateTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EventDisplayDateTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.Active)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.Active)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EventPassword)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EventPassword)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.MaxTeamMembers)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.MaxTeamMembers)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EmbedHTML)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.Event.EmbedHTML)
+        </dd>
+        <dd class="col-sm-12">
+            <table class="table">
+                <tr>
+                    <th>Team Name</th>
+                    <th>Members</th>
+                </tr>
+                @foreach (var item in Model.Event.Teams)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TeamName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Registrations.Count)
+                        </td>
+                        <td>
+                            <a asp-area="Registration" asp-page="/Teams/Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-area="Registration" asp-page="/Teams/Details" asp-route-id="@item.Id">Details</a> |
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Event.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

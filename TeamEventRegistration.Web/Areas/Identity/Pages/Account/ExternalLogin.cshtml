@@ -1,0 +1,73 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h4>
+<hr />
+
+<p id="external-login-description" class="text-info">
+    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+    Please enter an email address for this site below and click the Register button to finish
+    logging in.
+</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Member.Email"></label>
+                <input asp-for="Member.Email" class="form-control" />
+                <span asp-validation-for="Member.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.PhoneNumber"></label>
+                <input asp-for="Member.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Member.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.FirstName"></label>
+                <input asp-for="Member.FirstName" class="form-control" />
+                <span asp-validation-for="Member.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.LastName"></label>
+                <input asp-for="Member.LastName" class="form-control" />
+                <span asp-validation-for="Member.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.NickName"></label>
+                <input asp-for="Member.NickName" class="form-control" />
+                <span asp-validation-for="Member.NickName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.StreetAddress" class="control-label"></label>
+                <input asp-for="Member.StreetAddress" class="form-control" />
+                <span asp-validation-for="Member.StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.City" class="control-label"></label>
+                <input asp-for="Member.City" class="form-control" />
+                <span asp-validation-for="Member.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.State" class="control-label"></label>
+                <input asp-for="Member.State" class="form-control" />
+                <span asp-validation-for="Member.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.ZipCode" class="control-label"></label>
+                <input asp-for="Member.ZipCode" class="form-control" />
+                <span asp-validation-for="Member.ZipCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

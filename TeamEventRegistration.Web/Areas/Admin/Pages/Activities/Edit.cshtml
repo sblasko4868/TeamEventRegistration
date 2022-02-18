@@ -1,0 +1,140 @@
+﻿@page
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Activities.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Activity</h4>
+<hr />
+<form method="post">
+
+    <div class="row">
+        <div class="col-md">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Activity.Id" />
+            <div class="form-group">
+                <label asp-for="Activity.ActivityName" class="control-label"></label>
+                <input asp-for="Activity.ActivityName" class="form-control" />
+                <span asp-validation-for="Activity.ActivityName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Activity.ActivityDescription" class="control-label"></label>
+                <textarea name="@($"{nameof(Model.Activity)}.{nameof(Model.Activity.ActivityDescription)}")" class="editor" aria-label="editor">
+                    @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.Activity.ActivityDescription))
+                </textarea>
+                <span asp-validation-for="Activity.ActivityDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Activity.ActivityRules" class="control-label"></label>
+                <textarea asp-for="Activity.ActivityRules" class="editor" aria-label="editor">
+                    @System.Net.WebUtility.HtmlEncode(Model.Activity.ActivityRules)
+                </textarea>
+                <span asp-validation-for="Activity.ActivityRules" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label select-label">Available Events</label>
+            </div>
+            <div class="form-group">
+                <input type='text' class="form-control" id='availalbleEventsSearchBox' placeholder='Filter available events' />
+            </div>
+            <div class="form-group">
+                <select asp-for="AvailableEvents" class="form-control" asp-items="Model.AvailableEventsSelectList"></select>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label select-label">Selected Events</label>
+            </div>
+            <div class="form-group">
+                <select asp-for="SelectedEvents" class="form-control" asp-items="Model.SelectedEventsSelectList"></select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            var editor = $(".editor").kendoEditor({
+                tools: [
+                    "bold",
+                    "italic",
+                    "underline",
+                    "justifyLeft",
+                    "justifyCenter",
+                    "justifyRight",
+                    "insertUnorderedList",
+                    "createLink",
+                    "unlink",
+                    "insertImage",
+                    "tableWizard",
+                    "createTable",
+                    "addRowAbove",
+                    "addRowBelow",
+                    "addColumnLeft",
+                    "addColumnRight",
+                    "deleteRow",
+                    "deleteColumn",
+                    "mergeCellsHorizontally",
+                    "mergeCellsVertically",
+                    "splitCellHorizontally",
+                    "splitCellVertically",
+                    "tableAlignLeft",
+                    "tableAlignCenter",
+                    "tableAlignRight",
+                    "fontSize",
+                    "foreColor",
+                    "backColor",
+                ]
+            });
+
+            $("#availalbleEventsSearchBox").on("input", function (e) {
+                var listBox = $("#AvailableEvents").getKendoListBox();
+                var searchString = $(this).val();
+
+                listBox.dataSource.filter({ field: "text", operator: "contains", value: searchString });
+            });
+
+            var availableMembersLB = $("#AvailableEvents").kendoListBox({
+                width: "100%",
+                connectWith: "SelectedEvents",
+                toolbar: {
+                    tools: ["transferTo", "transferFrom", "transferAllTo", "transferAllFrom"]
+                }
+            });
+            $("#AvailableEvents").data("kendoListBox").wrapper.width("100%");
+
+            var selectedMembersLB = $("#SelectedEvents").kendoListBox({
+                width: "100%",
+                toolbar: {
+                    position: "right"
+                }
+            });
+            $("#SelectedEvents").data("kendoListBox").wrapper.width("100%");
+        });
+        
+    </script>
+}

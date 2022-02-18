@@ -1,0 +1,63 @@
+﻿@page "{RegistrationId}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Register.TeamModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Change Team</h1>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Teams[0].TeamName)
+                        </th>
+                        <th>Captain</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Teams)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="SelectedTeam" type="radio" value="@item.Id" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TeamName)
+                            </td>
+                            <td>
+                                @{
+                                    var captainRegistrations = item.Registrations.Where(r => r.IsCaptain).Select(r => r.Member.FullName);
+                                    if (captainRegistrations.Count() > 0)
+                                    {
+                                        <div>@string.Join(", ", captainRegistrations)</div>
+                                    }
+                                    else
+                                    {
+                                        <div>None</div>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md">
+                    <div class="form-group">
+                        <input type="submit" name="submit" value="Save" class="btn btn-primary" />
+                        <a asp-area="Registration" asp-page="/Teams/Create" asp-route-eventId="@Model.Registration.EventId" class="btn btn-primary">Create New Team</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

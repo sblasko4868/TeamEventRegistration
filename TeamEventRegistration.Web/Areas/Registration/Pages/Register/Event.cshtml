@@ -1,0 +1,30 @@
+﻿@page "{id}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Register.EventModel
+@using Microsoft.AspNetCore.Identity
+
+<div class="row">
+    <div class="col-md">
+        <form method="post">
+            <input type="hidden" asp-for="Event.Id" />
+            @if (Model.Event.Registrations.Where(r => r.MemberId == Model.CurrentUser.Id).Any())
+            {
+                <div>You are already registered for this event.</div>
+            }
+            else
+            {
+                <h4>Registration Requirements - @Model.Event.EventName</h4>
+                <div id="EventRegistrationRequirements">
+                    <ul>
+                        @foreach (var eventRegistrationRequirement in Model.Event.EventRegistrationRequirements)
+                        {
+                            <li>
+                                @eventRegistrationRequirement.RegistrationRequirement.Name @(string.IsNullOrEmpty(eventRegistrationRequirement.RegistrationRequirement.Description) ? string.Empty : ": " + @eventRegistrationRequirement.RegistrationRequirement.Description)
+                            </li>
+                        }
+                    </ul>
+                    <input class="btn btn-primary" type="submit" value="Register" />
+                </div>
+            }
+        </form>
+    </div>
+</div>

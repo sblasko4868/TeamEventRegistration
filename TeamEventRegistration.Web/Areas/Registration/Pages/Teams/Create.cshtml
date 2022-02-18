@@ -1,0 +1,115 @@
+﻿@page "{eventId}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Teams.CreateModel 
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Team</h1>
+
+<h4>Event: @Model.EventName</h4>
+<hr />
+<form id="createTeamForm" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="NewTeamName" class="control-label"></label>
+                <input asp-for="NewTeamName" class="form-control" />
+                <span asp-validation-for="NewTeamName" class="text-danger"></span>
+            </div>
+            <div>
+                @if (!string.IsNullOrEmpty(Model.FormMessage)) { 
+                    <div class="alert alert-warning" role="alert" id="formMessage">@Model.FormMessage</div>
+                }
+                <div id="confirmationMessage"></div>
+            </div>
+            @if (Model.Condition == Pages.Teams.CreateModel.RegistrationCondition.UserIsTeamCaptain)
+            {
+                <div class="form-group">
+                    <select id="teamCaptainList" class="form-control" asp-for="SelectedCaptainId" asp-items="Model.AvailableCaptainsSelectList"></select>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <input type="hidden" asp-for="Condition" />
+            <input type="hidden" asp-for="CurrentUserTeamRegistrationId" />
+            <div class="form-group">
+                <input type="button" id="btnSave" class="btn btn-primary" value="Create" />
+            </div>
+            <div class="form-group">
+                <input type="button" id="btnSaveAndAddMembers" class="btn btn-primary" value="Create and Add Members" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    var confirmationMessage;
+    var confirmationTitle;
+    var form;
+    var handler;
+    var requireConfirm = false;
+
+    function submitForm(form, handler) {
+        form.attr("action", window.location.pathname + "?handler=" + handler);
+        form.submit();
+    }
+
+    function trySubmitForm() {
+        var isValid = form.valid();
+        if (isValid) {
+            if (requireConfirm) {
+                $("#confirmationMessage").data("kendoDialog").open()
+            }
+            else {
+                submitForm(form, handler);
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        form = $("#createTeamForm")
+        $("#btnSave").click(function () {
+            handler = "Save";
+            trySubmitForm();
+        });
+        $("#btnSaveAndAddMembers").click(function () {
+            handler = "SaveAndAddMembers";
+            trySubmitForm();
+        });
+
+        var condition = $("#Condition").val();
+        switch (condition) {
+            case "@Pages.Teams.CreateModel.RegistrationCondition.UserIsTeamCaptain":
+                confirmationMessage = "You will be removed from your previous team and the selected member will be assigned captain.";
+                confirmationTitle = "Confirm Captain Change"
+                requireConfirm = true;
+                break;
+            default:
+                requireConfirm = false;
+        }
+        if (requireConfirm) {
+            $("#confirmationMessage").kendoDialog({
+                title: confirmationTitle,
+                content: confirmationMessage,
+                visible: false,
+                actions: [{
+                    text: "Confirm",
+                    action: function (e) {
+                        submitForm(form, handler);
+                    },
+                    primary: true
+                }, {
+                    text: "Cancel"
+                }]
+            });
+        }
+    });
+</script>
+}

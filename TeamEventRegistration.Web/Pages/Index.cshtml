@@ -1,0 +1,117 @@
+﻿@page
+@model IndexModel
+@inject SignInManager<Member> SignInManager
+@{
+    ViewData["Title"] = "Home";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @if (Model.Events != null)
+    {
+        <div>
+            @foreach (var item in Model.Events)
+            {
+                <div class="border border-dark rounded mb-3 p-3">
+                    <div>
+                        <div class="row my-2">
+                            <div class="col-md">
+                                <div class="h2">
+                                    @Html.DisplayFor(modelItem => item.EventName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-6 mb-2">
+                                <div class="h3">Event Information</div>
+                                <div>
+                                    <div>
+                                        <span class="font-weight-bold">
+                                            @Html.DisplayNameFor(model => model.Events[0].RegistrationEnd): 
+                                        </span>
+                                        <span>
+                                            @Html.DisplayFor(modelItem => item.RegistrationEnd)
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="font-weight-bold">
+                                        @Html.DisplayNameFor(model => model.Events[0].EventDisplayDateTime):
+                                    </span>
+                                    <span>
+                                        @Html.DisplayFor(modelItem => item.EventDisplayDateTime)
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                @{
+                                    var currentUserEventRegistration = item.Registrations.Where(r => r.MemberId == Model.CurrentUserId).FirstOrDefault();
+                                }
+
+                                @if (currentUserEventRegistration != null)
+                                {
+                                    <div class="row mb-2">
+                                        <div class="col-md">
+                                            <div class="h3">Team</div>
+                                            @if (currentUserEventRegistration.TeamId == null)
+                                            {
+                                                <a class="btn btn-primary" asp-area="Registration" asp-page="/Register/Team" asp-route-RegistrationId="@currentUserEventRegistration.Id">Join Team</a>
+                                            }
+                                            else
+                                            {
+                                                <div><span class="font-weight-bold">Current Team: </span>@currentUserEventRegistration.Team.TeamName</div>
+                                                <a class="btn btn-secondary" asp-area="Registration" asp-page="/Register/Team" asp-route-RegistrationId="@currentUserEventRegistration.Id">Change Team</a>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                <div class="row mb-2">
+                                    <div class="col-md">
+                                        <div class="h3">Registration</div>
+                                        @if (currentUserEventRegistration != null)
+                                        {
+
+                                            @if (currentUserEventRegistration.RegistrationComplete)
+                                            {
+                                                <div class="text-success">Registration Complete</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-danger">Registration Incomplete</div>
+                                                <a class="btn btn-primary" asp-area="Registration" asp-page="/Register/Check" asp-route-id="@currentUserEventRegistration.Id">Check Registration</a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-primary" asp-area="Registration" asp-page="/Register/Event" asp-route-id="@item.Id">Register</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(item.EmbedHTML))
+                    {
+                        <div class="row my-2">
+                            <div class="col-md">
+                                @Html.Raw(item.EmbedHTML)
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div>No current events</div>
+    }
+}
+else
+{
+    <div class="text-center">
+        <div class="display-4">Welcome</div>
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a> to use the application.
+    </div>
+}

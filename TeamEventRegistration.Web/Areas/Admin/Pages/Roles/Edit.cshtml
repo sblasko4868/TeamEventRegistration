@@ -1,0 +1,75 @@
+﻿@page "{id}"
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Roles.EditModel
+
+<h1>Edit</h1>
+
+<h4>Team</h4>
+<hr />
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Role.Id" />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label select-label">Available Members</label>
+            </div>
+            <div class="form-group">
+                <input type='text' class="form-control" id='availalbleMembersSearchBox' placeholder='Filter available members' />
+            </div>
+            <div class="form-group">
+                <select asp-for="AvailableMembers" class="form-control" asp-items="Model.AvailableMembersSelectList"></select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label select-label">Selected Members</label>
+            </div>
+            <div class="form-group">
+                <select asp-for="SelectedMembers" class="form-control" asp-items="Model.SelectedMembersSelectList"></select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                <input type="submit" name="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    $(document).ready(function () {
+        $("#availalbleMembersSearchBox").on("input", function (e) {
+            var listBox = $("#AvailableMembers").getKendoListBox();
+            var searchString = $(this).val();
+
+            listBox.dataSource.filter({ field: "text", operator: "contains", value: searchString });
+        });
+
+        var availableMembersLB = $("#AvailableMembers").kendoListBox({
+            width: "100%",
+            connectWith: "SelectedMembers",
+            toolbar: {
+                tools: ["transferTo", "transferFrom", "transferAllTo", "transferAllFrom"]
+            }
+        });
+        $("#AvailableMembers").data("kendoListBox").wrapper.width("100%");
+
+        var selectedMembersLB = $("#SelectedMembers").kendoListBox({
+            width: "100%",
+            toolbar: {
+                position: "right"
+            }
+        });
+        $("#SelectedMembers").data("kendoListBox").wrapper.width("100%");
+    });
+</script>
+}

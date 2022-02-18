@@ -1,0 +1,150 @@
+﻿@page
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Teams.IndexModel
+@using TeamEventRegistration.Core.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@{
+    ViewData["Title"] = "Teams";
+    // TODO: Add Join buttons?
+}
+
+@if (Model.Events.Count > 0)
+{
+    @foreach (var eventObj in Model.Events)
+    {
+        <div class="h3">@eventObj.EventName</div>
+        <div class="py-2">
+            <a asp-area="Registration" asp-page="/Teams/Create" asp-route-eventId="@eventObj.Id" class="btn btn-primary">Create Team for @eventObj.EventName</a>
+        </div>
+        @if (eventObj.Registrations.Count > 0)
+        {
+            @if (eventObj.Teams.Count > 0)
+            {
+                <div class="h4">Teams</div>
+                <div class="row">
+                    @foreach (var item in eventObj.Teams)
+                    {
+                        <div class="col-lg-6 mb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title h5">
+                                        @Html.DisplayFor(modelItem => item.TeamName)
+                                    </h5>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="pb-2">
+                                                <div>Complete: <span class="font-weight-bold text-success">@(item.Registrations.Where(r => r.RegistrationComplete).Count())</span></div>
+                                                <div>Incomplete: <span class="font-weight-bold text-warning">@(item.Registrations.Where(r => !r.RegistrationComplete).Count())</span></div>
+                                                @if (item.Event.MaxTeamMembers > 0)
+                                                {
+                                                    <div>Openings: <span class="text-info font-weight-bold">@(item.Event.MaxTeamMembers - item.Registrations.Count())</span></div>
+                                                }
+                                            </div>
+                                            <div>
+                                                @if (AuthorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Update).Result.Succeeded)
+                                                {
+                                                    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                                                }
+                                                @if (AuthorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Read).Result.Succeeded)
+                                                {
+                                                    <a class="btn btn-secondary" asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                                                }
+                                                @if (AuthorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Delete).Result.Succeeded)
+                                                {
+                                                    <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <ul class="list-group">
+                                                <li class="list-group-item list-group-item-dark py-1 px-2">Members</li>
+                                                @foreach (var registration in item.Registrations)
+                                                {
+                                                    <li class="list-group-item py-1 px-2">
+                                                        <div>
+                                                            @registration.Member.FullName
+                                                            @if (!string.IsNullOrEmpty(registration.Member.NickName))
+                                                            {
+                                                                <span>(a.k.a @registration.Member.NickName)</span>
+                                                            }
+                                                            @if (registration.IsCaptain)
+                                                            {
+                                                                <i class="bi bi-trophy-fill text-secondary" data-toggle="tooltip" data-placement="top" title="Captain"></i>
+                                                            }
+                                                            @if (registration.RegistrationComplete)
+                                                            {
+                                                                <i class="bi bi-check-circle-fill text-success" data-toggle="tooltip" data-placement="top" title="Registration Complete"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="bi bi-exclamation-triangle-fill text-warning" data-toggle="tooltip" data-placement="top" title="Registration Incomplete"></i>
+                                                            }
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div>No teams registered.</div>
+            }
+            @if (eventObj.Registrations.Where(r => r.TeamId == null).Count() > 0)
+            {
+                <div class="h4">Participants Not Joined to a Team</div>
+                <div class="row">
+                    @foreach (var registration in eventObj.Registrations.Where(r => r.TeamId == null))
+                    {
+                        <div class="col-lg-4 col-md-6 mb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        @registration.Member.FullName
+                                        @if (!string.IsNullOrEmpty(registration.Member.NickName))
+                                        {
+                                            <span>(a.k.a @registration.Member.NickName)</span>
+                                        }
+                                        @if (registration.RegistrationComplete)
+                                        {
+                                            <i class="bi bi-check-circle-fill text-success" data-toggle="tooltip" data-placement="top" title="Registration Complete"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-exclamation-triangle-fill text-warning" data-toggle="tooltip" data-placement="top" title="Registration Incomplete"></i>
+                                        }
+                                    </h6>
+                                    <div>
+                                        @registration.Member.Email
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div>No teams or registrations to display. Ensure you are registered for an active event to view and join teams.</div>
+        }
+    }
+}
+else
+{
+    <div>No active events.</div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

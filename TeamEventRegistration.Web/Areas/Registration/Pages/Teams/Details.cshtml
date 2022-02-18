@@ -1,0 +1,79 @@
+﻿@page "{id}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Teams.DetailsModel
+@using TeamEventRegistration.Core.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Team</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Team.TeamName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Team.TeamName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Team.Event)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Team.Event.EventName)
+        </dd>
+        <dt class="col-sm-2">
+            <div>Team Members</div>
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Team.Registrations.Count > 0)
+            {
+                @foreach (var registration in Model.Team.Registrations)
+                {
+                    <div>
+                        @registration.Member.FullName
+                        @if (registration.IsCaptain)
+                        {
+                            <i class="bi bi-trophy-fill text-secondary" data-toggle="tooltip" data-placement="top" title="Captain"></i>
+                        }
+                        @if (registration.RegistrationComplete)
+                        {
+                            <i class="bi bi-check-circle-fill text-success" data-toggle="tooltip" data-placement="top" title="Registration Complete"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-exclamation-triangle-fill text-warning" data-toggle="tooltip" data-placement="top" title="Registration Incomplete"></i>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div>None</div>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (AuthorizationService.AuthorizeAsync(User, Model.Team, AuthorizationOperations.Update).Result.Succeeded)
+    {
+        <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@Model.Team.Id">Edit</a>
+    }
+    @if (AuthorizationService.AuthorizeAsync(User, Model.Team, AuthorizationOperations.Delete).Result.Succeeded)
+    {
+        <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@Model.Team.Id">Delete</a>
+    }
+    <a class="btn btn-secondary" asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

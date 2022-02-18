@@ -1,0 +1,107 @@
+﻿@page
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Members.EditModel
+
+<h4>Member</h4>
+<hr />
+
+<form method="post">
+    <div class="row">
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Member.Id" />
+            <div class="form-group">
+                <label asp-for="Member.Email" class="control-label"></label>
+                <input asp-for="Member.Email" class="form-control" />
+                <span asp-validation-for="Member.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.FirstName" class="control-label"></label>
+                <input asp-for="Member.FirstName" class="form-control" />
+                <span asp-validation-for="Member.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.LastName" class="control-label"></label>
+                <input asp-for="Member.LastName" class="form-control" />
+                <span asp-validation-for="Member.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.NickName" class="control-label"></label>
+                <input asp-for="Member.NickName" class="form-control" />
+                <span asp-validation-for="Member.NickName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.PhoneNumber" class="control-label"></label>
+                <input asp-for="Member.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Member.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.StreetAddress" class="control-label"></label>
+                <input asp-for="Member.StreetAddress" class="form-control" />
+                <span asp-validation-for="Member.StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.City" class="control-label"></label>
+                <input asp-for="Member.City" class="form-control" />
+                <span asp-validation-for="Member.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.State" class="control-label"></label>
+                <input asp-for="Member.State" class="form-control" />
+                <span asp-validation-for="Member.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.ZipCode" class="control-label"></label>
+                <input asp-for="Member.ZipCode" class="form-control" />
+                <span asp-validation-for="Member.ZipCode" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label select-label">Available Roles</label>
+                <select asp-for="AvailableRoles" class="form-control" asp-items="Model.AvailableRolesSelectList"></select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label select-label">Selected Roles</label>
+                <select asp-for="SelectedRoles" class="form-control" asp-items="Model.SelectedRolesSelectList"></select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            var availableMembersLB = $("#AvailableRoles").kendoListBox({
+                width: "100%",
+                connectWith: "SelectedRoles",
+                toolbar: {
+                    tools: ["transferTo", "transferFrom", "transferAllTo", "transferAllFrom"]
+                }
+            });
+            $("#AvailableRoles").data("kendoListBox").wrapper.width("100%");
+
+            var selectedMembersLB = $("#SelectedRoles").kendoListBox({
+                width: "100%",
+                toolbar: {
+                    position: "right"
+                }
+            });
+            $("#SelectedRoles").data("kendoListBox").wrapper.width("100%");
+        });
+    </script>
+}

@@ -1,0 +1,24 @@
+﻿@page "{Id}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Register.CheckModel
+@{
+    ViewData["Title"] = "Check Registration";
+}
+<h1>Check Registration</h1>
+<div class="row">
+    <div class="col-md">
+        @if (Model.Status.IsMet)
+        {
+            <div class="text-success">Registration Complete</div>
+        }
+        else
+        {
+            <div class="text-danger">Registration Incomplete</div>
+        }
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md">
+        <div>@Html.Raw(Model.Status.Message)</div>
+    </div>
+</div>

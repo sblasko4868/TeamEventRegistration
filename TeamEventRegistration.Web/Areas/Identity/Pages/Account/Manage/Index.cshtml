@@ -1,0 +1,65 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Member.Email"></label>
+                <input asp-for="Member.Email" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.PhoneNumber"></label>
+                <input asp-for="Member.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Member.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.FirstName"></label>
+                <input asp-for="Member.FirstName" class="form-control" />
+                <span asp-validation-for="Member.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.LastName"></label>
+                <input asp-for="Member.LastName" class="form-control" />
+                <span asp-validation-for="Member.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.NickName"></label>
+                <input asp-for="Member.NickName" class="form-control" />
+                <span asp-validation-for="Member.NickName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.StreetAddress" class="control-label"></label>
+                <input asp-for="Member.StreetAddress" class="form-control" />
+                <span asp-validation-for="Member.StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.City" class="control-label"></label>
+                <input asp-for="Member.City" class="form-control" />
+                <span asp-validation-for="Member.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.State" class="control-label"></label>
+                <input asp-for="Member.State" class="form-control" />
+                <span asp-validation-for="Member.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.ZipCode" class="control-label"></label>
+                <input asp-for="Member.ZipCode" class="form-control" />
+                <span asp-validation-for="Member.ZipCode" class="text-danger"></span>
+            </div>
+            <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

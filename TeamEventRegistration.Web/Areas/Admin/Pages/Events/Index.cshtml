@@ -1,0 +1,77 @@
+﻿@page
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Events.IndexModel
+@using TeamEventRegistration.Core.Authorization
+@using Microsoft.AspNetCore.Authorization
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].EventName)
+            </th>
+            <th>
+                Dates
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Event[0].Active)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Event)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventName)
+                </td>
+                <td>
+                    <div>
+                        @Html.DisplayNameFor(model => item.RegistrationStart): @Html.DisplayFor(modelItem => item.RegistrationStart)
+                    </div>
+                    <div>
+                        @Html.DisplayNameFor(model => item.RegistrationEnd): @Html.DisplayFor(modelItem => item.RegistrationEnd)
+                    </div>
+                    <div>
+                        @Html.DisplayNameFor(model => item.EventDisplayDateTime): @Html.DisplayFor(modelItem => item.EventDisplayDateTime)
+                    </div>
+                </td>
+                <td>
+                    @if (item.Active)
+                    {
+                        <i class="bi bi-check-circle-fill text-success" data-toggle="tooltip" data-placement="top" title="Active"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-x-circle-fill text-danger" data-toggle="tooltip" data-placement="top" title="Not Active"></i>
+                    }
+                </td>
+                <td>
+                    @if (Model._authorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Update).Result.Succeeded)
+                    {
+                        <a class="btn btn-primary btn-sm mb-1" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    @if (Model._authorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Read).Result.Succeeded)
+                    {
+                        <a class="btn btn-primary btn-sm mb-1" asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                    }
+                    @if (Model._authorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Delete).Result.Succeeded)
+                    {
+                        <a class="btn btn-primary btn-sm mb-1" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                    @if (Model._authorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Update).Result.Succeeded)
+                    {
+                        <a class="btn btn-primary btn-sm mb-1" asp-area="Registration" asp-page="/Teams/Create" asp-route-eventId="@item.Id">Create Team</a>
+                    }
+                    @if (Model._authorizationService.AuthorizeAsync(User, item, AuthorizationOperations.Update).Result.Succeeded)
+                    {
+                        <a class="btn btn-primary btn-sm mb-1" asp-page="./Activities" asp-route-eventId="@item.Id">Manage Activities</a>
+                    }
+                    </td>
+            </tr>
+        }
+    </tbody>
+</table>

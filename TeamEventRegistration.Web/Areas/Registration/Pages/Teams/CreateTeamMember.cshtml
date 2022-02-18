@@ -1,0 +1,67 @@
+﻿@page "{TeamId}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Teams.CreateTeamMember
+
+<div class="row">
+    <div class="col-md">
+        <form method="post" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Member.Email" class="control-label"></label>
+                <input asp-for="Member.Email" class="form-control" />
+                <span asp-validation-for="Member.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.FirstName" class="control-label"></label>
+                <input asp-for="Member.FirstName" class="form-control" />
+                <span asp-validation-for="Member.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.LastName" class="control-label"></label>
+                <input asp-for="Member.LastName" class="form-control" />
+                <span asp-validation-for="Member.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.NickName" class="control-label"></label>
+                <input asp-for="Member.NickName" class="form-control" />
+                <span asp-validation-for="Member.NickName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.PhoneNumber" class="control-label"></label>
+                <input asp-for="Member.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Member.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.StreetAddress" class="control-label"></label>
+                <input asp-for="Member.StreetAddress" class="form-control" />
+                <span asp-validation-for="Member.StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.City" class="control-label"></label>
+                <input asp-for="Member.City" class="form-control" />
+                <span asp-validation-for="Member.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.State" class="control-label"></label>
+                <input asp-for="Member.State" class="form-control" />
+                <span asp-validation-for="Member.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.ZipCode" class="control-label"></label>
+                <input asp-for="Member.ZipCode" class="form-control" />
+                <span asp-validation-for="Member.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create and Add to Team" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="Edit" asp-route-id="@Model.TeamId">Cancel and Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

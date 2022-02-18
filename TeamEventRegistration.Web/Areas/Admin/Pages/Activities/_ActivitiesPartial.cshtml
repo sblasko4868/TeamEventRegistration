@@ -1,0 +1,48 @@
+﻿@model IList<Activity>
+
+<div class="row">
+    <div class="col">
+        @if (Model.Count > 0)
+        {
+            <div id="activities" class="large-card-columns card-columns">
+                @foreach (var activity in Model)
+                {
+                    <div class="item">
+                        <div class="card">
+                            <div class="bg-dark text-white card-body">
+                                <h5 class="mb-0 card-title h5">
+                                    @Html.DisplayFor(model => activity.ActivityName)
+                                </h5>
+                            </div>
+                            <div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item list-group-item-dark">
+                                        @Html.DisplayNameFor(model => activity.ActivityDescription)
+                                    </li>
+                                    <li class="list-group-item">
+                                        @Html.Raw(activity.ActivityDescription)
+                                    </li>
+                                    <li class="list-group-item list-group-item-dark">
+                                        @Html.DisplayNameFor(model => activity.ActivityRules)
+                                    </li>
+                                    <li class="list-group-item">
+                                        @Html.Raw(activity.ActivityRules)
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@activity.Id">Edit</a>
+                                <a class="btn btn-primary" asp-page="./Details" asp-route-id="@activity.Id">Details</a>
+                                <a class="btn btn-primary" asp-page="./Delete" asp-route-id="@activity.Id">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        } 
+        else
+        {
+            <div>No activities to display.</div>
+        }
+    </div>
+</div>

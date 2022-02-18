@@ -1,0 +1,34 @@
+﻿@page
+@model TeamEventRegistration.Web.Areas.Admin.Pages.Activities.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-primary" asp-page="Create">Create New</a>
+</p>
+<div class="row">
+    <div class="col">
+        <div>
+            <input class="form-control mb-2" id="searchInput" type="text" placeholder="Search Activities...">
+        </div>
+    </div>
+</div>
+
+<partial name="_ActivitiesPartial" model="Model.Activities" />
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#activities .item").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+}

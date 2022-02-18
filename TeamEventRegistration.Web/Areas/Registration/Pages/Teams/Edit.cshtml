@@ -1,0 +1,109 @@
+﻿@page "{id}"
+@model TeamEventRegistration.Web.Areas.Registration.Pages.Teams.EditModel
+@inject UserManager<Member> UserManager
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Team</h4>
+<hr />
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Team.Id" />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Team.TeamName" class="control-label"></label>
+                <input asp-for="Team.TeamName" class="form-control" />
+                <span asp-validation-for="Team.TeamName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label asp-for="Team.Registrations" class="form-label select-label"></label>
+                @if (Model.Team.Event.MaxTeamMembers != null)
+                {
+                    <div class="text-secondary pb-1">Max number of registrations: @Model.Team.Event.MaxTeamMembers</div>
+                }
+                <div id="saveAndAddTeamMember" class="pb-1">
+                    <div class="text-secondary pb-1">If a member is not found in the list, they have not been created or are a member of another team.</div>
+                    <input id="btnSaveAndAddTeamMember" class="btn btn-primary" type="submit" name="submit" value="@Model.SaveAndAddTeamMember" />
+                </div>
+                <select id="TeamMemberList" asp-for="SelectedTeamMemberIds" class="form-control" asp-items="Model.AvailableTeamMembersList"></select>
+            </div>
+            <div class="form-group">
+                <label class="form-label select-label">Team Captain</label>
+                <div id="teamCaptainListWarning" class="text-danger"></div>
+                <select id="teamCaptainList" class="form-control" asp-for="CaptainId" asp-items="Model.SelectedTeamMembersList">
+                    @if (string.IsNullOrEmpty(Model.CaptainId))
+                    {
+                        <option></option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                <input type="submit" name="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    function checkMaxTeamMembers() {
+        if ($("#TeamMemberList").val().length >= @(Model.Team.Event.MaxTeamMembers)) {
+            $("#saveAndAddTeamMember").hide();
+        }
+        else {
+            $("#saveAndAddTeamMember").show();
+        }
+    }
+    function setCaptainOptions() {
+        var currentCaptainId = $("#teamCaptainList option:selected").val();
+        var currentCaptainText = $("#teamCaptainList option:selected").text();
+        $("#teamCaptainList").empty();
+        $("#TeamMemberList option:selected").each(function (index) {
+            $('#teamCaptainList').append($('<option>').val($(this).val()).text($(this).text()));
+        });
+        if (currentCaptainId) {
+            if (!$("#TeamMemberList").val().includes(currentCaptainId)) {
+                $("#teamCaptainListWarning").text("Previous team captain removed from team: " + currentCaptainText);
+            }
+            else {
+                $("#teamCaptainListWarning").text("");
+                $("#teamCaptainList option[value='" + currentCaptainId + "']").attr('selected', true);
+            }
+        }
+        else {
+            $('#teamCaptainList').prepend($('<option>').attr('selected', true));
+            $("#teamCaptainListWarning").text("");
+        }
+    }
+
+    $(document).ready(function () {
+        checkMaxTeamMembers();
+        var teamMemberMultiSelectList = $("#TeamMemberList").kendoMultiSelect({
+            maxSelectedItems: @((Model.Team.Event.MaxTeamMembers > 0) ? Model.Team.Event.MaxTeamMembers.ToString() : "null"),
+            filter: "contains",
+            height: "auto"
+        });
+        $("#TeamMemberList").data("kendoMultiSelect").wrapper.addClass("h-auto");
+        $("#TeamMemberList").change(function () {
+            checkMaxTeamMembers();
+            setCaptainOptions();
+        });
+    });
+</script>
+}
